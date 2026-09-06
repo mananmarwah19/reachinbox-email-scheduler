@@ -1,61 +1,104 @@
-ReachInbox Email Scheduler
+# ReachInbox Email Scheduler
 
-A full-stack email scheduling application inspired by ReachInbox, supporting Google authentication, email composition, scheduled delivery, persistent storage, background processing, rate limiting, concurrency control, and separate Scheduled and Sent email views.
+A full-stack **email scheduling application** inspired by ReachInbox, supporting Google authentication, email composition, scheduled delivery, persistent storage, background processing, rate limiting, concurrency control, and separate Scheduled and Sent email views.
 
-🔗 Links
-GitHub Repository: https://github.com/mananmarwah19/reachinbox-email-scheduler
-Live Deployment: http://localhost:5173/
-Demo Video: https://drive.google.com/file/d/1yIouRtwShS-_5dxATycVhtHnBAgnyVna/view?usp=sharing
-🚀 Features
-Backend
-Email Scheduler
-Create and schedule emails for a future date and time.
-Persist scheduled emails before processing.
-Process scheduled emails asynchronously using BullMQ and Redis.
-Support email delivery through the configured SMTP/email transport.
-Persistence
-Store application and email data in PostgreSQL using Prisma.
-Scheduled emails remain persisted across backend/worker restarts.
-Redis maintains BullMQ queue state for background processing.
-Rate Limiting
-Configurable hourly email limits.
-Configurable per-sender hourly limits.
-Emails exceeding the configured limit are delayed/rescheduled instead of being sent immediately.
-Concurrency
-BullMQ worker supports configurable job concurrency.
-Multiple email jobs can be processed concurrently according to the configured worker limit.
-Send Delay
-Configurable minimum delay between email sends.
-Authentication
-Google OAuth authentication using Passport.js.
-Session-based authentication.
-Queue Monitoring
-BullMQ queue dashboard is available for monitoring background jobs.
-Health Check
-Backend provides a health endpoint to verify API availability.
-Frontend
-Google Authentication / Login
-Dashboard
-Email Composition
-Email Scheduling
-Scheduled Emails Table
-Sent Emails Table
-Email Status Tracking
-Search / Filtering
-Sender Management
-Delete Sender
-Responsive UI
-🛠️ Tech Stack
-Layer	Technologies
-Frontend	React, TypeScript, Vite, Tailwind CSS
-Backend	Node.js, Express, TypeScript
-Database	PostgreSQL, Prisma
-Queue	Redis, BullMQ
-Authentication	Passport.js, Google OAuth
-Email	Nodemailer, SMTP
-Search	Elasticsearch
-Deployment	Vercel
-📁 Project Structure
+---
+
+## 🔗 Links
+
+- **GitHub Repository:** https://github.com/mananmarwah19/reachinbox-email-scheduler
+- **Live Deployment:** http://localhost:5173/
+- **Demo Video:** https://drive.google.com/file/d/1yIouRtwShS-_5dxATycVhtHnBAgnyVna/view?usp=sharing
+
+---
+
+## 🚀 Features
+
+### Backend
+
+- **Email Scheduler**
+  - Create and schedule emails for a future date and time.
+  - Persist scheduled emails before processing.
+  - Process scheduled emails asynchronously using **BullMQ** and **Redis**.
+  - Support email delivery through the configured SMTP/email transport.
+
+- **Persistence**
+  - Store application and email data in **PostgreSQL** using **Prisma**.
+  - Scheduled emails remain persisted across backend/worker restarts.
+  - Redis maintains BullMQ queue state for background processing.
+
+- **Rate Limiting**
+  - Configurable hourly email limits.
+  - Configurable per-sender hourly limits.
+  - Emails exceeding the configured limit are delayed/rescheduled instead of being sent immediately.
+
+- **Concurrency**
+  - BullMQ worker supports configurable job concurrency.
+  - Multiple email jobs can be processed concurrently according to the configured limit.
+
+- **Send Delay**
+  - Configurable minimum delay between email sends.
+
+- **Authentication**
+  - Google OAuth authentication using **Passport.js**.
+  - Session-based authentication.
+
+- **Queue Monitoring**
+  - BullMQ queue dashboard is available for monitoring background jobs.
+
+- **Health Check**
+  - Backend provides a health endpoint to verify API availability.
+
+### Frontend
+
+- **Google Authentication / Login**
+- **Dashboard**
+- **Email Composition**
+- **Email Scheduling**
+- **Scheduled Emails Table**
+- **Sent Emails Table**
+- **Email Status Tracking**
+- **Search / Filtering**
+- **Sender Management**
+- **Delete Sender**
+- **Responsive UI**
+
+---
+
+## 🛠️ Tech Stack
+
+### Frontend
+
+- **React**
+- **TypeScript**
+- **Vite**
+- **Tailwind CSS**
+
+### Backend
+
+- **Node.js**
+- **Express**
+- **TypeScript**
+- **Prisma**
+- **PostgreSQL**
+- **Redis**
+- **BullMQ**
+- **Passport.js**
+- **Google OAuth**
+- **Nodemailer**
+- **Elasticsearch**
+
+### Deployment
+
+- **Vercel** for the deployed application
+- **PostgreSQL** for persistent data
+- **Redis** for BullMQ background jobs
+
+---
+
+## 📁 Project Structure
+
+```text
 reachinbox-email-scheduler/
 │
 ├── backend/
@@ -81,6 +124,7 @@ reachinbox-email-scheduler/
 ├── package-lock.json
 ├── vercel.json
 └── README.md
+
 ⚙️ Local Setup
 Prerequisites
 
@@ -92,6 +136,7 @@ PostgreSQL
 Redis
 Git
 Docker (recommended for PostgreSQL and Redis)
+
 1. Clone the Repository
 git clone https://github.com/mananmarwah19/reachinbox-email-scheduler.git
 cd reachinbox-email-scheduler
@@ -388,7 +433,7 @@ Creating a scheduled email
 Scheduled email dashboard
 Stopping the backend/worker
 Restarting the backend/worker
-Verifying that the scheduled email persists after restart
+Verifying the scheduled email persists after restart
 BullMQ worker processing
 Successful email delivery
 Sent email dashboard
