@@ -1,8 +1,51 @@
-ReachInbox Email Scheduler
+##ReachInbox Email Scheduler
 
-A full-stack email scheduling application inspired by ReachInbox, with Google authentication, email composition, scheduled delivery, persistent storage, background job processing, rate limiting, concurrency control, and separate Scheduled and Sent email views.
+A full-stack email scheduling application inspired by ReachInbox, supporting Google authentication, email composition, scheduled delivery, persistent storage, background processing, rate limiting, concurrency control, and separate Scheduled and Sent email views.
 
-Tech Stack
+🔗 Links
+GitHub Repository: https://github.com/mananmarwah19/reachinbox-email-scheduler
+Live Deployment: YOUR_VERCEL_DEPLOYMENT_URL
+Demo Video: YOUR_GOOGLE_DRIVE_VIDEO_URL
+🚀 Features
+Backend
+Email Scheduler
+Create and schedule emails for a future date and time.
+Persist scheduled emails before processing.
+Process scheduled emails asynchronously using BullMQ and Redis.
+Support email delivery through the configured SMTP/email transport.
+Persistence
+Store application and email data in PostgreSQL using Prisma.
+Scheduled emails remain persisted across backend/worker restarts.
+Redis maintains BullMQ queue state for background processing.
+Rate Limiting
+Configurable hourly email limits.
+Configurable per-sender hourly limits.
+Emails exceeding the configured limit are delayed/rescheduled instead of being sent immediately.
+Concurrency
+BullMQ worker supports configurable job concurrency.
+Multiple email jobs can be processed concurrently according to the configured worker limit.
+Send Delay
+Configurable minimum delay between email sends.
+Authentication
+Google OAuth authentication using Passport.js.
+Session-based authentication.
+Queue Monitoring
+BullMQ queue dashboard is available for monitoring background jobs.
+Health Check
+Backend provides a health endpoint to verify API availability.
+Frontend
+Google Authentication / Login
+Dashboard
+Email Composition
+Email Scheduling
+Scheduled Emails Table
+Sent Emails Table
+Email Status Tracking
+Search / Filtering
+Sender Management
+Delete Sender
+Responsive UI
+🛠️ Tech Stack
 Frontend
 React
 TypeScript
@@ -12,138 +55,95 @@ Backend
 Node.js
 Express
 TypeScript
-Prisma ORM
+Prisma
 PostgreSQL
 Redis
 BullMQ
-Passport.js / Google OAuth
+Passport.js
+Google OAuth
 Nodemailer
 Elasticsearch
 Deployment
 Vercel for the deployed application
 PostgreSQL for persistent application data
-Redis for BullMQ job processing
-Features Implemented
+Redis for BullMQ background jobs
+📁 Project Structure
+
+reachinbox-email-scheduler/
+│
+├── backend/
+│ ├── src/
+│ │ ├── config/
+│ │ ├── integrations/
+│ │ ├── queues/
+│ │ ├── routes/
+│ │ ├── workers/
+│ │ └── ...
+│ ├── prisma/
+│ ├── package.json
+│ └── .env
+│
+├── frontend/
+│ ├── src/
+│ ├── public/
+│ ├── package.json
+│ └── ...
+│
+├── docker-compose.yml
+├── package.json
+├── package-lock.json
+├── vercel.json
+└── README.md
+
+⚙️ Local Setup
+Prerequisites
+
+Make sure the following are installed:
+
+Node.js
+npm
+PostgreSQL
+Redis
+Git
+Docker (recommended for PostgreSQL and Redis)
+1. Clone the Repository
+
+git clone https://github.com/mananmarwah19/reachinbox-email-scheduler.git
+cd reachinbox-email-scheduler
+
+2. Install Dependencies
 Backend
-Email Scheduler
-Creates and persists scheduled emails.
-Creates BullMQ jobs for scheduled delivery.
-Worker processes scheduled email jobs asynchronously.
-Supports immediate and future email delivery.
-Persistence
-Email and sender information is stored in PostgreSQL through Prisma.
-Scheduled emails remain persisted across backend/worker restarts.
-BullMQ with Redis handles background job processing.
-A restarted worker can continue processing scheduled jobs.
-Rate Limiting
-Supports configurable hourly email limits.
-Supports per-sender hourly limits.
-Prevents emails from exceeding configured sending limits.
-Emails that cannot currently be sent because of the hourly limit are delayed/rescheduled.
-Concurrency
-BullMQ worker supports configurable job concurrency.
-Multiple email jobs can be processed concurrently according to the configured worker limit.
-Minimum Send Delay
-Configurable delay between email sends to control sending throughput.
-Email Sending
-Uses Nodemailer and the configured email transport.
-Successfully processed jobs are marked as sent.
-Authentication
-Google OAuth authentication using Passport.js.
-Session-based authentication for protected application functionality.
-Queue Monitoring
-BullMQ queue dashboard is available through the backend for monitoring queued jobs.
-Health Check
-Backend exposes a health endpoint for checking API availability.
+
+cd backend
+npm install
+
 Frontend
-Google authentication/login flow.
-ReachInbox-style dashboard.
-Email composition interface.
-Schedule emails for future delivery.
-Scheduled emails table.
-Sent emails table.
-Email status tracking.
-Search/filter functionality.
-Sender management.
-Delete sender functionality.
-Responsive application interface.
-Dashboard counters for Scheduled and Sent emails.
-Architecture Overview
-                    ┌─────────────────────┐
-                    │      Frontend       │
-                    │ React + TypeScript  │
-                    │       Vite          │
-                    └──────────┬──────────┘
-                               │
-                               │ REST API
-                               ▼
-                    ┌─────────────────────┐
-                    │       Express       │
-                    │      Backend        │
-                    └──────┬──────┬───────┘
-                           │      │
-                  ┌────────┘      └─────────┐
-                  ▼                         ▼
-          ┌──────────────┐          ┌──────────────┐
-          │ PostgreSQL   │          │    Redis     │
-          │   Prisma     │          │   BullMQ     │
-          └──────────────┘          └──────┬───────┘
-                                           │
-                                           ▼
-                                  ┌─────────────────┐
-                                  │ Email Worker    │
-                                  │ Async Delivery  │
-                                  └────────┬────────┘
-                                           │
-                                           ▼
-                                  ┌─────────────────┐
-                                  │ Email Provider  │
-                                  │   / SMTP        │
-                                  └─────────────────┘
-How Scheduling Works
-The user logs in and composes an email from the frontend.
-The frontend sends the email and scheduling information to the Express backend.
-The backend validates the request and persists the email in PostgreSQL.
-A BullMQ job is created with the required execution time.
-Redis stores the queue state used by BullMQ.
-The email worker consumes the job when it becomes ready.
-Before sending, the worker applies the configured rate limits and sending delay.
-The worker sends the email through the configured SMTP/email transport.
-After successful delivery, the email is marked as sent and becomes visible in the Sent dashboard.
-Persistence on Restart
 
-Scheduling information is persisted in PostgreSQL instead of relying only on application memory.
+Open another terminal:
 
-BullMQ uses Redis for background job management. The worker processes persisted queue jobs independently from the frontend.
+cd frontend
+npm install
 
-Because the email record and scheduling state are persisted, restarting the backend or worker does not intentionally remove the scheduled email. Once the worker is running again, it can continue processing scheduled jobs.
+3. Start PostgreSQL and Redis
 
-Rate Limiting and Delay
+From the project root, run:
 
-The worker supports configurable sending controls, including:
+docker compose up -d
 
-Maximum emails per hour
-Maximum emails per hour per sender
-Minimum delay between sends
-Worker concurrency
+This starts the required PostgreSQL and Redis services.
 
-When a sender reaches the configured hourly limit, the email job is delayed/rescheduled rather than being immediately sent.
+Verify that both services are running before starting the backend.
 
-These controls help prevent excessive sending and regulate email throughput.
+🔐 Backend Environment Variables
 
-Concurrency
+Create a file:
 
-BullMQ Worker concurrency is configurable through the backend configuration.
+backend/.env
 
-This allows multiple jobs to be processed concurrently while still respecting the application's rate-limiting and delay rules.
-
-Environment Variables
-
-Create a .env file inside the backend directory.
-
-Example:
+Add the required environment variables:
 
 DATABASE_URL="your_postgresql_connection_string"
+
 REDIS_URL="redis://127.0.0.1:6379"
 
 SESSION_SECRET="your_session_secret"
@@ -153,7 +153,7 @@ GOOGLE_CLIENT_SECRET="your_google_client_secret"
 GOOGLE_CALLBACK_URL="your_google_callback_url"
 
 SMTP_HOST="your_smtp_host"
-SMTP_PORT="your_smtp_port"
+SMTP_PORT=587
 SMTP_USER="your_smtp_username"
 SMTP_PASS="your_smtp_password"
 
@@ -162,206 +162,270 @@ MIN_SEND_DELAY_MS=1000
 MAX_EMAILS_PER_HOUR=50
 MAX_EMAILS_PER_HOUR_PER_SENDER=50
 
-Use the actual variable names and values required by the project configuration.
+Never commit the .env file or any credentials/secrets to GitHub.
 
-Never commit the .env file or secrets to GitHub.
+📧 Ethereal Email Setup
 
-Ethereal Email Setup
+For development/testing, the application can use Ethereal Email as the SMTP transport.
 
-Ethereal Email can be used as a test SMTP service for development and demonstration.
-
-Create an Ethereal test account.
+Setup
+Create an Ethereal Email test account.
 Obtain the SMTP credentials provided by Ethereal.
-Add the SMTP host, port, username, and password to the backend .env file.
-Start the backend and worker.
-Send or schedule an email from the application.
-Use the Ethereal preview URL to inspect test emails when using the Ethereal transport.
+Add the SMTP credentials to backend/.env.
+Start the backend and BullMQ worker.
+Send or schedule an email through the application.
+Use the Ethereal preview URL to inspect the test email when using the Ethereal transport.
 
-Example SMTP configuration:
+Example:
 
 SMTP_HOST="smtp.ethereal.email"
 SMTP_PORT=587
 SMTP_USER="your_ethereal_username"
 SMTP_PASS="your_ethereal_password"
-Prerequisites
 
-Install:
+🗄️ Database Setup
 
-Node.js
-npm
-PostgreSQL
-Redis
-
-Git is also required to clone the repository.
-
-Project Structure
-reachinbox-email-scheduler/
-│
-├── backend/
-│   ├── src/
-│   │   ├── config/
-│   │   ├── integrations/
-│   │   ├── queues/
-│   │   ├── routes/
-│   │   ├── workers/
-│   │   └── ...
-│   ├── prisma/
-│   ├── package.json
-│   └── .env
-│
-├── frontend/
-│   ├── src/
-│   ├── public/
-│   ├── package.json
-│   └── ...
-│
-├── docker-compose.yml
-├── package.json
-├── package-lock.json
-├── vercel.json
-└── README.md
-How to Run Locally
-1. Clone the repository
-git clone https://github.com/mananmarwah19/reachinbox-email-scheduler.git
-cd reachinbox-email-scheduler
-2. Install dependencies
-
-Install backend dependencies:
+From the backend directory:
 
 cd backend
-npm install
 
-Install frontend dependencies:
+Generate the Prisma client:
 
-cd ../frontend
-npm install
-3. Start PostgreSQL and Redis
+npx prisma generate
 
-The project includes Docker configuration for the required services.
-
-From the project root:
-
-docker compose up -d
-
-Make sure PostgreSQL and Redis are running before starting the backend.
-
-4. Configure backend environment variables
-
-Create:
-
-backend/.env
-
-Add the required database, Redis, authentication, SMTP, and worker configuration values.
-
-5. Run database migrations
-
-From backend:
+Run the database migrations:
 
 npx prisma migrate deploy
 
-If generating the Prisma client is required:
+Make sure PostgreSQL is running before executing the migration.
 
-npx prisma generate
-6. Start the backend
+▶️ Running the Application Locally
 
-From:
+The application requires three processes:
 
-backend/
+Backend
+BullMQ Worker
+Frontend
+1. Start the Backend
 
-run:
+Open a terminal:
 
+cd reachinbox-email-scheduler/backend
 npm run dev
-7. Start the BullMQ worker
 
-Open another terminal:
+The Express backend will start on the configured backend port.
 
-cd backend
+2. Start the BullMQ Worker
+
+Open a second terminal:
+
+cd reachinbox-email-scheduler/backend
 npm run worker
 
-The worker must remain running for scheduled email jobs to be processed.
+The worker must remain running for scheduled emails to be processed.
 
-8. Start the frontend
+The worker consumes jobs from Redis/BullMQ and sends emails when they become due.
 
-Open another terminal:
+3. Start the Frontend
 
-cd frontend
+Open a third terminal:
+
+cd reachinbox-email-scheduler/frontend
 npm run dev
 
-Open the Vite URL shown by the terminal, normally:
+Open the Vite URL shown in the terminal, normally:
 
 http://localhost:5173
-Running the Application
 
-The complete local flow is:
+🧩 Architecture Overview
+                ┌──────────────────────┐
+                │      FRONTEND        │
+                │ React + TypeScript   │
+                │        Vite          │
+                └──────────┬───────────┘
+                           │
+                           │ REST API
+                           ▼
+                ┌──────────────────────┐
+                │       EXPRESS        │
+                │       BACKEND        │
+                └───────┬───────┬──────┘
+                        │       │
+             ┌──────────┘       └──────────┐
+             ▼                            ▼
+    ┌────────────────┐           ┌────────────────┐
+    │   PostgreSQL   │           │     Redis      │
+    │     Prisma     │           │    BullMQ      │
+    └────────────────┘           └───────┬────────┘
+                                         │
+                                         ▼
+                                ┌─────────────────┐
+                                │  Email Worker   │
+                                │ Async Processing│
+                                └────────┬────────┘
+                                         │
+                                         ▼
+                                ┌─────────────────┐
+                                │  SMTP / Email   │
+                                │    Transport    │
+                                └─────────────────┘
+📅 How Scheduling Works
 
-Login with Google
-       ↓
-Open Dashboard
-       ↓
+The scheduling flow is:
+
+User
+↓
 Compose Email
-       ↓
-Select Schedule Time
-       ↓
-Persist Email
-       ↓
+↓
+Select Future Date/Time
+↓
+Frontend API Request
+↓
+Express Backend
+↓
+Persist Email in PostgreSQL
+↓
 Create BullMQ Job
-       ↓
+↓
 Redis Queue
-       ↓
+↓
 BullMQ Worker
-       ↓
-Rate Limit / Delay / Concurrency Checks
-       ↓
+↓
+Rate Limit / Delay Checks
+↓
 Send Email
-       ↓
-Mark Email as Sent
-       ↓
+↓
+Update Email Status
+↓
 Sent Dashboard
-Restart Persistence Flow
 
-To verify persistence:
+Detailed Flow
+The user logs in through Google authentication.
+The user composes an email from the frontend.
+The frontend sends the email data and scheduling information to the Express backend.
+The backend validates the request.
+The scheduled email is persisted in PostgreSQL.
+A BullMQ job is created for the scheduled execution.
+Redis stores the queue state.
+The BullMQ worker processes the job when it becomes ready.
+Rate limits and configured sending delays are applied.
+The email is sent through the configured SMTP transport.
+The email is marked as sent.
+The email becomes visible in the Sent dashboard.
+🔄 Persistence on Restart
+
+Persistence is implemented using PostgreSQL rather than relying only on in-memory application state.
+
+The scheduling information is stored in the database and BullMQ uses Redis for background job management.
+
+Therefore, when the backend or worker is restarted:
+
+Scheduled Email
+↓
+Persisted in PostgreSQL
+↓
+Backend / Worker Restart
+↓
+Application Starts Again
+↓
+Worker Continues Processing
+↓
+Scheduled Email Is Sent
+
+This prevents scheduled email information from being lost simply because the application process was restarted.
+
+🚦 Rate Limiting
+
+The worker supports configurable email rate limits.
+
+The relevant configuration includes:
+
+MAX_EMAILS_PER_HOUR=50
+MAX_EMAILS_PER_HOUR_PER_SENDER=50
+
+The rate limiter prevents a sender from exceeding the configured hourly sending limit.
+
+When the hourly limit has been reached, the email is delayed/rescheduled rather than immediately sent.
+
+This provides controlled email throughput and prevents excessive sending.
+
+⏱️ Send Delay
+
+The worker supports a configurable minimum delay between email sends:
+
+MIN_SEND_DELAY_MS=1000
+
+This helps regulate the sending rate even when multiple jobs are available for processing.
+
+⚡ Concurrency
+
+BullMQ worker concurrency is configurable:
+
+WORKER_CONCURRENCY=5
+
+This allows multiple email jobs to be processed concurrently while still applying the configured rate limits and send delays.
+
+Concurrency allows the worker to process multiple independent jobs efficiently without processing everything sequentially.
+
+🔁 Restart Scenario
+
+The application supports persistence across backend/worker restarts.
+
+To verify:
 
 Start PostgreSQL and Redis.
 Start the backend.
 Start the BullMQ worker.
 Schedule an email for a future time.
-Confirm that it appears in Scheduled.
-Stop the backend/worker.
-Start the backend/worker again.
-Refresh the application.
-Confirm that the scheduled email remains persisted.
-Allow the scheduled time to arrive.
-Confirm that the worker processes the job.
+Confirm the email appears in Scheduled.
+Stop the backend and/or worker.
+Start the services again.
+Refresh the frontend.
+Confirm that the scheduled email is still present.
+Wait until its scheduled time.
+Confirm that the BullMQ worker processes the job.
 Confirm that the email appears in Sent.
-Assumptions, Shortcuts and Trade-offs
-The application is intended as an email scheduling assignment/demo rather than a production-scale email delivery platform.
-SMTP credentials and other secrets are provided through environment variables and are not committed to the repository.
-Redis and PostgreSQL are treated as available infrastructure for local development.
-Rate limits and worker concurrency are configurable rather than hard-coded to a single production configuration.
-The email transport can be configured for testing using Ethereal Email.
-The frontend and backend can be deployed separately while the repository is maintained as a monorepo.
+🔐 Security
+Authentication uses Google OAuth.
+Sessions are used for authenticated application functionality.
+Environment variables are used for credentials and secrets.
+.env files are excluded from Git.
+Database credentials, SMTP credentials, OAuth secrets, and session secrets must not be committed to the repository.
+📝 Assumptions, Shortcuts & Trade-offs
+The application is designed as an email scheduling assignment/demo rather than a production-scale email delivery platform.
+PostgreSQL and Redis are treated as available infrastructure for local development.
+SMTP credentials are supplied through environment variables.
+Ethereal Email can be used as a test email transport during development.
+Worker concurrency, delays, and rate limits are configurable.
 BullMQ and Redis are used to keep email processing asynchronous and separate from the API request lifecycle.
-Demo
+The frontend and backend are maintained together as a monorepo while remaining independently runnable.
+🎥 Demo Video
 
-The demo video demonstrates:
+The demo demonstrates:
 
-Google authentication.
-Dashboard and email status views.
-Creating and scheduling an email.
-Viewing the email in Scheduled.
-Restarting the backend/worker.
-Confirming that the scheduled email persists after restart.
-Processing and sending the scheduled email.
-Viewing the email in Sent.
-Brief overview of scheduling, persistence, rate limiting, and concurrency.
-Security
-Environment secrets are stored in .env.
-.env files are excluded from Git using .gitignore.
-Authentication is handled through Google OAuth.
-Sessions are used for authenticated requests.
-Do not expose SMTP credentials, Google OAuth secrets, database credentials, or session secrets publicly.
-Submission Repository
+Google authentication
+Dashboard
+Email composition
+Creating a scheduled email
+Scheduled email dashboard
+Stopping the backend/worker
+Restarting the backend/worker
+Verifying that the scheduled email persists after restart
+BullMQ worker processing
+Successful email delivery
+Sent email dashboard
+Overview of rate limiting, delay, concurrency, and persistence
 
-GitHub repository:
+Demo Video: YOUR_GOOGLE_DRIVE_VIDEO_URL
 
-https://github.com/mananmarwah19/reachinbox-email-scheduler
+The demo video is kept within the assignment's 5-minute maximum.
+
+🌐 Deployed Application
+
+Live Application: YOUR_VERCEL_DEPLOYMENT_URL
+
+📦 Submission Repository
+
+GitHub: https://github.com/mananmarwah19/reachinbox-email-scheduler
+
+The repository contains both the frontend and backend implementations along with the setup and architecture documentation required for the assignment.
