@@ -7,7 +7,7 @@ A full-stack **email scheduling application** inspired by ReachInbox, supporting
 ## 🔗 Links
 
 - **GitHub Repository:** https://github.com/mananmarwah19/reachinbox-email-scheduler
-- **Live Deployment:** http://localhost:5173/
+- **Live Deployment:** https://reachinbox-email-scheduler-firys29sb.vercel.app/
 - **Demo Video:** https://drive.google.com/file/d/1yIouRtwShS-_5dxATycVhtHnBAgnyVna/view?usp=sharing
 
 ---
@@ -445,7 +445,7 @@ The demo video is kept within the assignment's 5-minute maximum.
 
 🌐 Deployed Application
 
-Live Application: http://localhost:5173/
+Live Application: https://reachinbox-email-scheduler-firys29sb.vercel.app/
 
 📦 Submission Repository
 
