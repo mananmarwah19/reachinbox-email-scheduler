@@ -1,11 +1,11 @@
-##ReachInbox Email Scheduler
+ReachInbox Email Scheduler
 
 A full-stack email scheduling application inspired by ReachInbox, supporting Google authentication, email composition, scheduled delivery, persistent storage, background processing, rate limiting, concurrency control, and separate Scheduled and Sent email views.
 
 🔗 Links
 GitHub Repository: https://github.com/mananmarwah19/reachinbox-email-scheduler
-Live Deployment: YOUR_VERCEL_DEPLOYMENT_URL
-Demo Video: YOUR_GOOGLE_DRIVE_VIDEO_URL
+Live Deployment: http://localhost:5173/
+Demo Video: https://drive.google.com/file/d/1yIouRtwShS-_5dxATycVhtHnBAgnyVna/view?usp=sharing
 🚀 Features
 Backend
 Email Scheduler
@@ -46,55 +46,41 @@ Sender Management
 Delete Sender
 Responsive UI
 🛠️ Tech Stack
-Frontend
-React
-TypeScript
-Vite
-Tailwind CSS
-Backend
-Node.js
-Express
-TypeScript
-Prisma
-PostgreSQL
-Redis
-BullMQ
-Passport.js
-Google OAuth
-Nodemailer
-Elasticsearch
-Deployment
-Vercel for the deployed application
-PostgreSQL for persistent application data
-Redis for BullMQ background jobs
+Layer	Technologies
+Frontend	React, TypeScript, Vite, Tailwind CSS
+Backend	Node.js, Express, TypeScript
+Database	PostgreSQL, Prisma
+Queue	Redis, BullMQ
+Authentication	Passport.js, Google OAuth
+Email	Nodemailer, SMTP
+Search	Elasticsearch
+Deployment	Vercel
 📁 Project Structure
-
 reachinbox-email-scheduler/
 │
 ├── backend/
-│ ├── src/
-│ │ ├── config/
-│ │ ├── integrations/
-│ │ ├── queues/
-│ │ ├── routes/
-│ │ ├── workers/
-│ │ └── ...
-│ ├── prisma/
-│ ├── package.json
-│ └── .env
+│   ├── src/
+│   │   ├── config/
+│   │   ├── integrations/
+│   │   ├── queues/
+│   │   ├── routes/
+│   │   ├── workers/
+│   │   └── ...
+│   ├── prisma/
+│   ├── package.json
+│   └── .env
 │
 ├── frontend/
-│ ├── src/
-│ ├── public/
-│ ├── package.json
-│ └── ...
+│   ├── src/
+│   ├── public/
+│   ├── package.json
+│   └── ...
 │
 ├── docker-compose.yml
 ├── package.json
 ├── package-lock.json
 ├── vercel.json
 └── README.md
-
 ⚙️ Local Setup
 Prerequisites
 
@@ -107,23 +93,18 @@ Redis
 Git
 Docker (recommended for PostgreSQL and Redis)
 1. Clone the Repository
-
 git clone https://github.com/mananmarwah19/reachinbox-email-scheduler.git
 cd reachinbox-email-scheduler
-
 2. Install Dependencies
 Backend
-
 cd backend
 npm install
-
 Frontend
 
 Open another terminal:
 
 cd frontend
 npm install
-
 3. Start PostgreSQL and Redis
 
 From the project root, run:
@@ -182,7 +163,6 @@ SMTP_HOST="smtp.ethereal.email"
 SMTP_PORT=587
 SMTP_USER="your_ethereal_username"
 SMTP_PASS="your_ethereal_password"
-
 🗄️ Database Setup
 
 From the backend directory:
@@ -236,69 +216,67 @@ npm run dev
 Open the Vite URL shown in the terminal, normally:
 
 http://localhost:5173
-
 🧩 Architecture Overview
-                ┌──────────────────────┐
-                │      FRONTEND        │
-                │ React + TypeScript   │
-                │        Vite          │
-                └──────────┬───────────┘
-                           │
-                           │ REST API
-                           ▼
-                ┌──────────────────────┐
-                │       EXPRESS        │
-                │       BACKEND        │
-                └───────┬───────┬──────┘
-                        │       │
-             ┌──────────┘       └──────────┐
-             ▼                            ▼
-    ┌────────────────┐           ┌────────────────┐
-    │   PostgreSQL   │           │     Redis      │
-    │     Prisma     │           │    BullMQ      │
-    └────────────────┘           └───────┬────────┘
-                                         │
-                                         ▼
-                                ┌─────────────────┐
-                                │  Email Worker   │
-                                │ Async Processing│
-                                └────────┬────────┘
-                                         │
-                                         ▼
-                                ┌─────────────────┐
-                                │  SMTP / Email   │
-                                │    Transport    │
-                                └─────────────────┘
+                    ┌──────────────────────┐
+                    │      FRONTEND        │
+                    │ React + TypeScript   │
+                    │        Vite          │
+                    └──────────┬───────────┘
+                               │
+                               │ REST API
+                               ▼
+                    ┌──────────────────────┐
+                    │       EXPRESS        │
+                    │       BACKEND        │
+                    └───────┬───────┬──────┘
+                            │       │
+                 ┌──────────┘       └──────────┐
+                 ▼                            ▼
+        ┌────────────────┐           ┌────────────────┐
+        │   PostgreSQL   │           │     Redis      │
+        │     Prisma     │           │    BullMQ      │
+        └────────────────┘           └───────┬────────┘
+                                             │
+                                             ▼
+                                    ┌─────────────────┐
+                                    │  Email Worker   │
+                                    │ Async Processing│
+                                    └────────┬────────┘
+                                             │
+                                             ▼
+                                    ┌─────────────────┐
+                                    │  SMTP / Email   │
+                                    │    Transport    │
+                                    └─────────────────┘
 📅 How Scheduling Works
 
 The scheduling flow is:
 
 User
-↓
+  ↓
 Compose Email
-↓
+  ↓
 Select Future Date/Time
-↓
+  ↓
 Frontend API Request
-↓
+  ↓
 Express Backend
-↓
+  ↓
 Persist Email in PostgreSQL
-↓
+  ↓
 Create BullMQ Job
-↓
+  ↓
 Redis Queue
-↓
+  ↓
 BullMQ Worker
-↓
+  ↓
 Rate Limit / Delay Checks
-↓
+  ↓
 Send Email
-↓
+  ↓
 Update Email Status
-↓
+  ↓
 Sent Dashboard
-
 Detailed Flow
 The user logs in through Google authentication.
 The user composes an email from the frontend.
@@ -321,15 +299,15 @@ The scheduling information is stored in the database and BullMQ uses Redis for b
 Therefore, when the backend or worker is restarted:
 
 Scheduled Email
-↓
+       ↓
 Persisted in PostgreSQL
-↓
+       ↓
 Backend / Worker Restart
-↓
+       ↓
 Application Starts Again
-↓
+       ↓
 Worker Continues Processing
-↓
+       ↓
 Scheduled Email Is Sent
 
 This prevents scheduled email information from being lost simply because the application process was restarted.
@@ -416,13 +394,13 @@ Successful email delivery
 Sent email dashboard
 Overview of rate limiting, delay, concurrency, and persistence
 
-Demo Video: YOUR_GOOGLE_DRIVE_VIDEO_URL
+Demo Video: https://drive.google.com/file/d/1yIouRtwShS-_5dxATycVhtHnBAgnyVna/view?usp=sharing
 
 The demo video is kept within the assignment's 5-minute maximum.
 
 🌐 Deployed Application
 
-Live Application: YOUR_VERCEL_DEPLOYMENT_URL
+Live Application: http://localhost:5173/
 
 📦 Submission Repository
 
